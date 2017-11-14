@@ -28,7 +28,7 @@
           <% @article.highlights.reverse_each do |highlight| %>
             <div>
               <p id="show-highlights"><span id="selection-highlight"><%= highlight.selection %></span>
-                <span><%= link_to " ", "/api/v1/highlights/#{ highlight.id }", method: :delete, class: "refresh glyphicon glyphicon-trash"%> <%= link_to " ", "/api/v1/highlights/#{ highlight.id }", method: :patch, class: "updateHighlight glyphicon glyphicon-wrench"%></span>
+                <span><%= link_to " ", "/api/v1/highlights/#{ highlight.id }", method: :delete, class: "refresh glyphicon glyphicon-trash"%></span>
                 <a onclick="addHighlight('<%= highlight.selection %>')" class="glyphicon glyphicon-search"></a>
               </p>
             </div>
