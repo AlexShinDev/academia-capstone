@@ -40,7 +40,7 @@ function sendHighlight() {
   let articleId = parseInt(document.getElementById('showArticleId').innerHTML);
 
   $.post(
-        "https://secure-taiga-90640.herokuapp.com/api/v1/highlights",
+        "http://localhost:3000/api/v1/highlights",
         {
           selection: highlightSelection,
           user_id: userId,
@@ -52,15 +52,4 @@ function sendHighlight() {
   document.getElementById("selection").innerHTML = "highlight has been saved";
 }
 
-// $(function() {
-//   content = document.getElementById("searchable").textContent;
-// });
-// $(function() {
-//   $('#searchForSelection').on('click', function() {
-//     document.getElementById("searchable").innerHTML = content;
-//     console.log(content);
-//     $('#searchable').each(function() {
-//       $(this).html($(this).html().replace($('#selection-highlight').val(),"<span class='highlight'>" + $('#selection-highlight').val() + "</span>"));
-//     });
-//   });
-// });
+;
