@@ -58,7 +58,7 @@ class ArticlesController < ApplicationController
   end
 
   def lookup_create_chrome
-    article = Article.find_or_create_by(article_title: params[:article_title], user_id: params[:user_id])
+    article = Article.find_or_create_by(article_title: params[:article_title], user_id: 2)
   end
 
   def contact
