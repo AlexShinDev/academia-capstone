@@ -1,58 +1,57 @@
-let content = "";
-$(function() {
-  // enter
-  $("#searchTerm").keypress(function(e){
-    if(e.keyCode===13){
-      var searchTerm = $("#searchTerm").val();
-      var url = "https://en.wikipedia.org/w/api.php?action=opensearch&search="+ searchTerm +"&format=json&callback=?"; 
-      $.ajax({
-        url: url,
-        type: 'GET',
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        dataType: "json",
-        success: function(data, status, jqXHR) {
-          $("html, body").animate({ scrollTop: 780 }, 500);
-          $("#output").html();
-          for(var i=0;i<data[1].length;i++){
-            $("#output").prepend("<div><div class='well search-article'><a href='http://localhost:3000/api/v1/articles/" + data[1][i] + "'><h2>" + data[1][i] + "</h2>" + "<p>" + data[2][i] + "</p></a></div></div>");
-          }
-        }
-      });
-    }
-  });
-// click ajax call
-  $("#search").on("click", function() {
-    var searchTerm = $("#searchTerm").val();
-    var url = "https://en.wikipedia.org/w/api.php?action=opensearch&search="+ searchTerm +"&format=json&callback=?"; 
-    $.ajax({
-      url: url,
-      type: 'GET',
-      contentType: "application/json; charset=utf-8",
-      async: false,
-      dataType: "json",
-      // plop data
-      success: function(data, status, jqXHR) {
-        $("html, body").animate({ scrollTop: 780 }, 500);
-        $("#output").html("");
-        for (var i = 0;i < data[1].length;i++) {
-          $("#output").prepend("<div><div class='well search-article'><a href='http://localhost:3000/api/v1/articles/" + data[1][i] + "'><h2>" + data[1][i] + "</h2>" + "<p>" + data[2][i] + "</p></a></div></div>");
-        }
-      }
-    });  
-  });
-// random article
+if (!window.Dog) {
+  Dog = {};
+}
+
+Dog.Selector = {};
+Dog.Selector.getSelected = function() {
+  var t = '';
+  if (window.getSelection) {
+    t = window.getSelection();
+  } else if (document.getSelection) {
+    t = document.getSelection();
+  } else if (document.selection) {
+    t = document.selection.createRange().text;
+  }
+  return t;
+};
+
+Dog.Selector.mouseup = function() {
+  let st = Dog.Selector.getSelected();
+  if (st != "") {
+    //Use regex so it can read paraentheses.
+    let string = st.toString().replace(/\(/g, "\\(");
+    string = string.replace(/\)/g, "\\)");
+    let myRe = new RegExp("\\w*?" + string + "\\w*", "g");
+
+    let articleContent = document.getElementById("article-content").innerHTML;
+    let myArray = articleContent.match(myRe);
+
+    st = myArray[0];
+    document.getElementById("selection").innerHTML = st; 
+  }
+};
+
+$ (document).ready(function() {
+  $ (document).bind("mouseup", Dog.Selector.mouseup);
 });
+//send data to 
+function sendHighlight() {
+  let highlightSelection = document.getElementById('selection').innerHTML;
+  let userId = parseInt(document.getElementById('showUserId').innerHTML);
+  let articleId = parseInt(document.getElementById('showArticleId').innerHTML);
 
-$(function() {
-  $(".refresh").on("click", function() {
-    console.log("orange");
-    $( "#refreshHighlights" ).load(window.location.href + " #refreshHighlights" ); 
-
-    console.log("orange");
-  });
-});
-
+  $.post(
+        "http://localhost:3000/api/v1/highlights",
+        {
+          selection: highlightSelection,
+          user_id: userId,
+          article_id: articleId
+        },
+        function() {
+          $( "#refreshHighlights" ).load(window.location.href + " #refreshHighlights" );
+        });
+  document.getElementById("selection").innerHTML = "highlight has been saved";
+}
 
 let openingSpan = '<span class="highlight">';
 let closingSpan = '</span>';
@@ -71,7 +70,7 @@ function removeHighlight() {
 
 }
 
-function addHighlight(selectedText) {
+function searchHighlight(selectedText) {
 
   removeHighlight();
 
@@ -83,6 +82,7 @@ function addHighlight(selectedText) {
     let replaceContent = articleContent.replace(openingSpan, "<span>");
     articleDiv.innerHTML = replaceContent; 
   } else {
+    console.log(articleContent.slice(firstMarker, secondMarker));
     articleDiv.innerHTML = articleContent.slice(0, firstMarker) + openingSpan + articleContent.slice(firstMarker, secondMarker) + closingSpan + articleContent.slice(secondMarker);
     $('html, body').animate({
       scrollTop: $(".highlight").offset().top - $(".highlight").height() * 2
@@ -90,4 +90,5 @@ function addHighlight(selectedText) {
   }
 }
 
-// 
+// Place all the behaviors and hooks related to the matching controller here.
+// All this logic will automatically be available in application.js.

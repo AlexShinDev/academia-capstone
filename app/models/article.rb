@@ -34,9 +34,6 @@ class Article < ApplicationRecord
       article = Article.new(
                             article_title: wiki_article.title,
                             url: wiki_article.fullurl,
-                            # publisher: "Wikimedia Foundation, Inc",
-                            # medium: "Web",
-                            # content: wiki_article.text,
                             image: wiki_article.main_image_url,
                             summary: wiki_article.summary
                             )
@@ -45,12 +42,7 @@ class Article < ApplicationRecord
     articles
   end
 
-  # def self.edited_content(string)
-  # string.gsub(/(== ==|==)/, "<br />")
-  # end
-
   def self.wiki_find(title)
-    # reutrn json formated data need to mess with ruby code
     wiki_article = Wikipedia.find(title)
 
     wiki_content = wiki_article.sanitized_content.gsub(/(== ==|==)/, "<br />")

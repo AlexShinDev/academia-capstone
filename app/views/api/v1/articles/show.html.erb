@@ -22,14 +22,13 @@
           <span hidden id="showUserId"><%= current_user.id %></span>
           <span hidden id="showArticleId"><%= @article.id %></span>
           <button onclick="sendHighlight()" class="btn btn-primary">Save Highlight</button>
-          <!-- should auto update highlight when you click "Save Highlight" button -->
         </div>
         <div id="refreshHighlights">
           <% @article.highlights.reverse_each do |highlight| %>
             <div>
               <p id="show-highlights"><span id="selection-highlight"><%= highlight.selection %></span>
                 <span><%= link_to " ", "/api/v1/highlights/#{ highlight.id }", method: :delete, class: "refresh glyphicon glyphicon-trash"%></span>
-                <a onclick="addHighlight('<%= highlight.selection %>')" class="glyphicon glyphicon-search"></a>
+                <a onclick="searchHighlight('<%= highlight.selection %>')" class="glyphicon glyphicon-search"></a>
               </p>
             </div>
           <% end %>
